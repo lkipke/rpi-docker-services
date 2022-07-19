@@ -1,0 +1,28 @@
+services:
+  rpi-mysqldb:
+    image: mysql:5.7
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-db-volume:/var/lib/mysql
+      - ./mysql/init.sh:/docker-entrypoint-initdb.d/init_db.sh
+    networks:
+      - rpi-bridge
+  
+  grafana:
+    image: grafana/grafana-oss
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+    networks:
+      - rpi-bridge
+
+volumes:
+  mysql-db-volume:
+
+networks:
+  rpi-bridge:
